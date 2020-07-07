@@ -1,8 +1,8 @@
-from flask import render_template, flash, redirect, url_for
-from flask_login import current_user, login_user, logout_user
+from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user, login_user, logout_user, login_required
 
 from mysite import app, db
-from mysite.forms import LoginForm, RegistrationForm
+from mysite.forms import LoginForm, RegistrationForm, AccountUpdateForm
 from mysite.models import User
 
 
@@ -64,3 +64,22 @@ def register():
         return redirect(url_for('index'))
 
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/account', methods=['GET', 'POST'])
+@login_required
+def account():
+    form = AccountUpdateForm()
+    avatar = url_for('static', filename='img/avatars/' + current_user.avatar)
+
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Информация обновлена!', 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
+    return render_template('account.html', title='Личный кабинет', avatar=avatar, form=form)
