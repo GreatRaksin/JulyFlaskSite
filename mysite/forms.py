@@ -1,5 +1,6 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 
@@ -36,6 +37,7 @@ class RegistrationForm(FlaskForm):
 class AccountUpdateForm(FlaskForm):
     username = StringField('Имя пользователя', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
+    picture = FileField(validators=[FileAllowed(['jpg', 'png'])])
 
     submit = SubmitField('Обновить')
 

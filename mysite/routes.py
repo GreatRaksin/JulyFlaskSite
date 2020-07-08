@@ -1,3 +1,7 @@
+import os
+import secrets
+
+from PIL import Image
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -66,13 +70,37 @@ def register():
     return render_template('register.html', title='Регистрация', form=form)
 
 
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, p_ext = os.path.splitext(form_picture.filename)
+    p_filename = random_hex + p_ext
+    ''' нам загрузили фотку IMG_0221.jpg
+     мы разделили имя и расширение и у нас есть две переменные: _ = IMG_0221, p_ext=.jpg
+     мы склеиваем новое имя (hex) c расширением: 6a19a2590d6fda51.jpg
+     '''
+
+    picture_path = os.path.join(app.root_path, 'static/img/avatar', p_filename)
+    'JulyFlaskSite/mysite/static/img/avatar/6a19a2590d6fda51.jpg'
+
+    resize = (125, 125)
+    image = Image.open(form_picture)
+    image.thumbnail(resize)
+
+    # form_picture.save(picture_path)
+    image.save(picture_path)
+    return p_filename
+
+
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
     form = AccountUpdateForm()
-    avatar = url_for('static', filename='img/avatars/' + current_user.avatar)
+    avatar = url_for('static', filename='img/avatar/' + current_user.avatar)
 
     if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.avatar = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()
