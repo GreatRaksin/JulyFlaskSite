@@ -4,7 +4,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
 
-from mysite.models import user
+from mysite.models import User
 
 
 class LoginForm(FlaskForm):
@@ -24,12 +24,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Зарегистрироваться!')
 
     def validate_username(self, username):
-        u = user.query.filter_by(username=username.data.lower()).first()
+        user = User.query.filter_by(username=username.data.lower()).first()
         if user is not None:
             raise ValidationError('Используйте другое имя пользователя!')
 
     def validate_email(self, email):
-        u = user.query.filter_by(username=email.data.lower()).first()
+        user = User.query.filter_by(username=email.data.lower()).first()
         if user is not None:
             raise ValidationError('Используйте другой email!')
 
@@ -43,7 +43,7 @@ class AccountUpdateForm(FlaskForm):
 
     def validate_username(self, username):
         if username.data != current_user.username:
-            u = user.query.filter_by(username=username.data).first()
+            user = User.query.filter_by(username=username.data).first()
             if user is not None:
                 raise ValidationError('Используйте другое имя пользователя!')
 

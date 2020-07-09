@@ -7,7 +7,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 from mysite import app, db
 from mysite.forms import LoginForm, RegistrationForm, AccountUpdateForm, FeedbackForm
-from mysite.models import user, zvonok
+from mysite.models import User, Zvonok
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -15,12 +15,12 @@ from mysite.models import user, zvonok
 def index():
     form = FeedbackForm()
     if form.validate_on_submit():
-        z = zvonok(
+        zvonok = Zvonok(
             body=form.body.data,
             phone=form.phone.data,
             user_username=current_user.username
         )
-        db.session.add(z)
+        db.session.add(zvonok)
         db.session.commit()
 
         flash('Обращение отправлено!', 'success')
@@ -47,7 +47,7 @@ def login():
         return redirect(url_for('index'))
 
     if form.validate_on_submit():
-        u = user.query.filter_by(username=form.username.data).first()
+        user = User.query.filter_by(username=form.username.data).first()
 
         if user is None or not user.check_password(form.password.data):
             flash('Неправильное имя пользователя и/или пароль', 'danger')
@@ -72,7 +72,7 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
-        u = user(username=form.username.data.lower(), email=form.email.data.lower())
+        user = User(username=form.username.data.lower(), email=form.email.data.lower())
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -110,7 +110,7 @@ def account():
     form = AccountUpdateForm()
     avatar = url_for('static', filename='img/avatar/' + current_user.avatar)
 
-    feedback = zvonok.query.all()
+    feedback = Zvonok.query.all()
 
     if form.validate_on_submit():
         if form.picture.data:
