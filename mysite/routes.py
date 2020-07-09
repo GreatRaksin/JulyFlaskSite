@@ -110,6 +110,8 @@ def account():
     form = AccountUpdateForm()
     avatar = url_for('static', filename='img/avatar/' + current_user.avatar)
 
+    feedback = Zvonok.query.all()
+
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
@@ -123,4 +125,4 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
 
-    return render_template('account.html', title='Личный кабинет', avatar=avatar, form=form)
+    return render_template('account.html', title='Личный кабинет', avatar=avatar, form=form, feedback=feedback)
