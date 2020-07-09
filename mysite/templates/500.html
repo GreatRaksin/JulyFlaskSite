@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div id="notfound">
+        <div class="notfound">
+            <div class="notfound-404">
+                <h3>Oops! An unexpected error has occured</h3>
+                <h1><span>5</span><span>0</span><span>0</span></h1>
+            </div>
+            <h2>Заполните форму обратной связи и укажите страницу, где была ошибка!</h2>
+            <a class="btn btn-secondary" href="{{ url_for('index') }}">Заполнить форму!</a>
+        </div>
+    </div>
+{% endblock %}
