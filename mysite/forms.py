@@ -58,7 +58,7 @@ class FeedbackForm(FlaskForm):
     phone = StringField(
         'Ваш номер телефона (для обратной связи)',
         validators=[
-            Length(9, 11),
+            Length(9, 13),
             DataRequired()
         ])
     body = TextAreaField(
