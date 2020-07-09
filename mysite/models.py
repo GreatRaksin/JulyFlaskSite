@@ -1,6 +1,7 @@
-from mysite import db, login
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from mysite import db, login
 
 
 class User(UserMixin, db.Model):
@@ -30,7 +31,7 @@ class Zvonok(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     phone = db.Column(db.String(140))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_username = db.Column(db.String(20), db.ForeignKey('user.username'))
 
     def __repr__(self):
-        return f'Звонок от: {self.user_id}, текст: {self.body}'
+        return f'Звонок от: {self.user_username}, текст: {self.body}'

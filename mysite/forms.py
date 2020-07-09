@@ -1,8 +1,8 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, ValidationError, EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
 
 from mysite.models import User
 
@@ -52,3 +52,19 @@ class AccountUpdateForm(FlaskForm):
             user = User.query.filter_by(username=email.data).first()
             if user is not None:
                 raise ValidationError('Используйте другой email!')
+
+
+class FeedbackForm(FlaskForm):
+    phone = StringField(
+        'Ваш номер телефона (для обратной связи)',
+        validators=[
+            Length(9, 11),
+            DataRequired()
+        ])
+    body = TextAreaField(
+        'Текст обращения: ',
+        validators=[
+            Length(1, 200),
+            DataRequired()
+        ])
+    submit = SubmitField('Отправить')

@@ -6,14 +6,27 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 
 from mysite import app, db
-from mysite.forms import LoginForm, RegistrationForm, AccountUpdateForm
-from mysite.models import User
+from mysite.forms import LoginForm, RegistrationForm, AccountUpdateForm, FeedbackForm
+from mysite.models import User, Zvonok
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', title='Главная')
+    form = FeedbackForm()
+    if form.validate_on_submit():
+        zvonok = Zvonok(
+            body=form.body.data,
+            phone=form.phone.data,
+            user_username=current_user.username
+        )
+        db.session.add(zvonok)
+        db.session.commit()
+
+        flash('Обращение отправлено!', 'success')
+        return redirect('index')
+
+    return render_template('index.html', title='Главная', form=form)
 
 
 @app.route('/contacts')

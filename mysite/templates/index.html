@@ -8,4 +8,34 @@
         <h1>Привет, {{ current_user.username.capitalize() }}! Добро пожаловать на мой сайт!</h1>
     {% endif %}
 
+    <hr>
+
+    {% if current_user.is_authenticated %}
+        <h3 class="text-center">Здайте вопрос администратору сайта!</h3>
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.phone.label }}
+                {{ form.phone(class="form-control") }}
+                <small id="emailHelp" class="form-text text-muted">Телефон используется только администрацией
+                    сайта.</small>
+
+                {% for error in form.phone.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+
+            </div>
+            <div class="form-group">
+                {{ form.body.label }}
+                {{ form.body(class="form-control") }}
+
+                {% for error in form.body.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+    {% endif %}
+
 {% endblock %}
