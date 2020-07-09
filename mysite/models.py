@@ -6,8 +6,8 @@ from mysite import db, login
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, index=True)
-    email = db.Column(db.String(100), unique=True, index=True)
+    username = db.Column(db.String(20), index=True)
+    email = db.Column(db.String(100), index=True)
     password = db.Column(db.String(20))
     avatar = db.Column(db.String(20), default='default.jpg')
     zvonki = db.relationship('Zvonok', backref='author', lazy='dynamic')

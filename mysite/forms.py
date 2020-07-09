@@ -24,12 +24,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Зарегистрироваться!')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
+        user = User.query.filter_by(username=username.data.lower()).first()
         if user is not None:
             raise ValidationError('Используйте другое имя пользователя!')
 
     def validate_email(self, email):
-        user = User.query.filter_by(username=email.data).first()
+        user = User.query.filter_by(username=email.data.lower()).first()
         if user is not None:
             raise ValidationError('Используйте другой email!')
 
