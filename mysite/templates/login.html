@@ -2,7 +2,9 @@
 
 {% block content %}
 
-    <form method="post" novalidate>
+    <h2 class="text-center">Вход</h2>
+
+    <form method="post" novalidate class="form">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.username.label }}
